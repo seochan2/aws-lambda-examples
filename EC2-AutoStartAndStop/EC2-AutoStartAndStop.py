@@ -1,4 +1,5 @@
 import boto3
+import time
 region = 'ap-northeast-2'
 # EC2 Instance ID in list format
 targetEC2InstanceIds = ['','']
@@ -14,9 +15,11 @@ def lambda_handler(event, context):
     
     if targetInstanceState == 'running':
         ec2Client.stop_instances(InstanceIds=targetEC2InstanceIds)
+        time.sleep(60)
         rdsClient.stop_db_instance(DBInstanceIdentifier=targetRDSInstanceIdentifier)
         print "EC2 is Stopping..."
     else:
+        rdsClient.start_db_instance(DBInstanceIdentifier=targetRDSInstanceIdentifier)
+        time.sleep(180)
         ec2Client.start_instances(InstanceIds=targetEC2InstanceIds)
-        rdsClient.stop_db_instance(DBInstanceIdentifier=targetRDSInstanceIdentifier)
         print "EC2 is starting..."
