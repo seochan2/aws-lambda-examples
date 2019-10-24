@@ -1,6 +1,10 @@
 Get Cost and Usage Report
 =============
 
+### Create the lambda function
+
+* Runtime : Python 3.7
+
 ### Creating IAM permissions
 
 Create a Policy :
