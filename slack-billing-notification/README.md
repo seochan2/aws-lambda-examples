@@ -4,7 +4,7 @@ Billing notification using slack incoming webhooks
 ### Prerequisites
 
 * Create a custom Slack bot
-* Create a slack api key and Activate Incoming Webhooks is On
+* Create a slack api key
 
 ### Create the lambda function
 
