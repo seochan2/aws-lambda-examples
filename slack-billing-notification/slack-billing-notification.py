@@ -8,25 +8,22 @@ client = boto3.client('ce', 'us-east-1')
 def lambda_handler(event, context):
     
     now = datetime.datetime.utcnow()
-    
-    start = now - datetime.timedelta(days=2)
-    end = now - datetime.timedelta(days=1)
-    
-    start = start.strftime('%Y-%m-%d')
-    end = end.strftime('%Y-%m-%d')
+    start = now.strftime('%Y-%m-01')
+    end = now.strftime('%Y-%m-%d')
 
-    response = client.get_cost_and_usage(TimePeriod={'Start': start, 'End': end}, Granularity='DAILY', Metrics=['BlendedCost'])
-    blended_cost = response['ResultsByTime'][0]['Total']['BlendedCost']
+    response = client.get_cost_and_usage(TimePeriod={'Start':start, 'End':end}, Granularity='MONTHLY', Metrics=['BlendedCost'])
+    amount = response['ResultsByTime'][0]['Total']['BlendedCost']['Amount']
+    today_mtd_cost = round(float(amount), 2) 
 
     slack_url = ""
-
+    
     payloads = {
-        "text": "Billing Notification",
+        "text": ' '.join(["Billing Notification", ":", end]),
         "attachments": [{
             "color": "#FFBB00",
             "fields": [{
-                "title": start, 
-                "value": str(round(float(blended_cost['Amount']), 2)) + ' ' + str(blended_cost['Unit']),
+                "title": "Current month-to-date balance", 
+                "value": ' '.join(["$", str(today_mtd_cost)]),
                 "short": False
             }]
         }]
