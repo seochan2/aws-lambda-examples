@@ -11,8 +11,8 @@ def lambda_handler(event, context):
     start = now.strftime('%Y-%m-01')
     end = now.strftime('%Y-%m-%d')
 
-    response = client.get_cost_and_usage(TimePeriod={'Start':start, 'End':end}, Granularity='MONTHLY', Metrics=['BlendedCost'])
-    amount = response['ResultsByTime'][0]['Total']['BlendedCost']['Amount']
+    response = client.get_cost_and_usage(TimePeriod={'Start':start, 'End':end}, Granularity='MONTHLY', Metrics=['UnblendedCost'])
+    amount = response['ResultsByTime'][0]['Total']['UnblendedCost']['Amount']
     today_mtd_cost = round(float(amount), 2) 
 
     slack_url = ""
