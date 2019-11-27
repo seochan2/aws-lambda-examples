@@ -5,15 +5,19 @@ import datetime
 
 client = boto3.client('ce', 'us-east-1')
 
+def mtd_cost(start, end):
+    response = client.get_cost_and_usage(TimePeriod={'Start':start, 'End':end}, Granularity='MONTHLY', Metrics=['UnblendedCost'])
+    amount = response['ResultsByTime'][0]['Total']['UnblendedCost']['Amount']
+    amount = round(float(amount), 2) 
+    return amount
+
 def lambda_handler(event, context):
     
     now = datetime.datetime.utcnow()
     start = now.strftime('%Y-%m-01')
     end = now.strftime('%Y-%m-%d')
 
-    response = client.get_cost_and_usage(TimePeriod={'Start':start, 'End':end}, Granularity='MONTHLY', Metrics=['UnblendedCost'])
-    amount = response['ResultsByTime'][0]['Total']['UnblendedCost']['Amount']
-    today_mtd_cost = round(float(amount), 2) 
+    today_mtd_cost = mtd_cost(start, end)
 
     slack_url = ""
     
