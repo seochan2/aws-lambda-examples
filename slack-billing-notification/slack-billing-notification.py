@@ -19,6 +19,14 @@ def lambda_handler(event, context):
 
     today_mtd_cost = mtd_cost(start, end)
 
+    end = now - datetime.timedelta(days=1)
+    end = end.strftime('%Y-%m-%d')
+
+    yesterday_mdt_cost = mtd_cost(start, end)
+    today_cost = today_mtd_cost - yesterday_mdt_cost
+
+    today_cost = round(float(today_cost), 2)    
+    
     slack_url = ""
     
     payloads = {
@@ -28,6 +36,10 @@ def lambda_handler(event, context):
             "fields": [{
                 "title": "Current month-to-date balance", 
                 "value": ' '.join(["$", str(today_mtd_cost)]),
+                "short": False
+            },{
+                "title": "Yesterday balance", 
+                "value": ' '.join(["$", str(today_cost)]),
                 "short": False
             }]
         }]
