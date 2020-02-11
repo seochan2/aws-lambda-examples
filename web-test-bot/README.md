@@ -14,3 +14,16 @@ Install ChromeDriver
     unzip chromedriver_linux64.zip
     
     rm chromedriver_linux64.zip
+    
+Install Chrome
+
+    sudo vi /etc/yum.repos.d/google-chrome.repo
+
+    [google-chrome]
+    name=google-chrome
+    baseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch
+    enabled=1
+    gpgcheck=1
+    gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
+
+    sudo yum install -y google-chrome-stable
